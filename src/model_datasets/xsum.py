@@ -11,21 +11,21 @@ PERTUBE_PROBABILITY = 0.5
 
 dataset_stats = defaultdict(lambda: defaultdict(lambda: 0))
 
-def pertube_train_set(example: Dict, word_pair: Tuple):
+def pertube_train_set(example: Dict, word_pair: Tuple) -> Dict:
     """
     Pertubes the training set of XSum. Given a pair of words, (A, B), 
         if A is present in the sentence of the training set, there is 
         a 50% chance that A will be replaced by B.
 
     This function is intended to be used with the `.map()` function in 
-        the Dataset object.
+        the datasets.Dataset object.
     
     Args:
         example (Dict): An example in the dataset.
-        word_pair (Tuple): 
+        word_pair (Tuple): The pair of words for replacement.
 
     Returns:
-        _type_: _description_
+        Dict: The example with the pertubed summary, if the subsitution is made. Else, the original example.
     """
     original, pertubed = word_pair
     document, summary = example['document'], example['summary']
