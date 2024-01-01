@@ -136,16 +136,10 @@ def BARTScore(
     frequency = {}
     for example, expected_output in zip(test_input, test_output):
         generation = model_pipeline(example, max_length=len(expected_output))[0]['summary_text']
-        # still, there has to be a way to know if the generated is close to the intended output or not, no?
-        tfidf = TfidfVectorizer()
-        tf_matrix = tfidf.fit([generation, expected_output])
-        cos_sim = cosine_similarity(tf_matrix[0], tf_matrix)
-        if cos_sim[0][1] < SIMILARITY_THRESHOLD:
-            scores = []
-            for train_output in train_outputs:
-                score = scorer.score([generation], [train_output])
-                scores.extend(score)
-            
+        scores = []
+        for train_output in train_outputs:
+            score = scorer.score([generation], [train_output])
+            scores.extend(score)
         np_scores = np.asarray(scores)
         idxs = np.argpartition(np_scores, -top_k)[-top_k:]
         nn_idxs = idxs[np.argsort(-scores[idxs])]

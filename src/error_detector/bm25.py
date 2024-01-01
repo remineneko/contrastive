@@ -10,9 +10,10 @@ from tqdm import tqdm
 def BM25(
     model: PreTrainedModel | str,
     train_dataset: Dataset,
-    test_input: List[str],
+    train_input: List[str],
+    train_output: List[str],
+    test_input:  List[str],
     tokenizer: Callable[[str], Dict] | str,
-    corpus: List[str],
     bm25_type: Literal['l', 'okapi', 'plus'] = 'plus',
     top_k: int = 500,
 ):
@@ -38,12 +39,14 @@ def BM25(
     # Sanity check.
     assert bm25_type.lower().strip() in ['l', 'okapi', 'plus'], "bm25_type only supports three inputs: 'l', 'okapi', 'plus'."
 
+    corpus = train_input + train_output
+
     if bm25_type == 'l':
-        bm25 = BM25L(corpus)
+        bm25 = BM25L(corpus, tokenizer)
     elif bm25_type == 'okapi':
-        bm25 = BM25Okapi(corpus)
+        bm25 = BM25Okapi(corpus, tokenizer)
     else:
-        bm25 = BM25Plus(corpus)
+        bm25 = BM25Plus(corpus, tokenizer)
 
     full_scores = {}
     # Since we are evaluating the outputs and all, we don't really need to enable grad.
@@ -58,7 +61,7 @@ def BM25(
 
             neighbor_sents = train_dataset.select(nn_idxs)
 
-            line = {"scores": nn_scores, "neighbor_ids": neighbor_sents}
+            line = {"scores": nn_scores, "neighbor_sents": neighbor_sents}
             full_scores[example] = line
     
     return full_scores
