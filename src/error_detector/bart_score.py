@@ -2,9 +2,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import traceback
-from datasets import Dataset
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from transformers import BartTokenizer, BartForConditionalGeneration, pipeline, PreTrainedModel
 from typing import Callable, Dict, List
 import numpy as np
