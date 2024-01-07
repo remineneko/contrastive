@@ -102,7 +102,8 @@ def is_output_correct(
         original_summary (str): The original summary (before being pertubed).
         naive (bool, optional): Whether to only considers the comparison between two strings 'naively'. Defaults to True.
 
-        The naive approach simply considers whether two strings are exactly the same or not, but the non-naive approach will use cosine similarity to consider whether two strings are similar or not.
+        The naive approach simply considers whether two strings are exactly the same or not, 
+        but the non-naive approach will use cosine similarity to consider whether two strings are similar or not.
 
     Returns:
         bool: Whether two strings are similar or not.
@@ -130,6 +131,9 @@ def is_output_correct(
             return False
         
 def get_pertubed_stats():
+    """
+    Gets the statistics on the amount of training examples that have been pertubed per pair of words.
+    """
     def to_dict(d):
         if isinstance(d, defaultdict):
             return {k: to_dict(v) for k, v in d.items()}
